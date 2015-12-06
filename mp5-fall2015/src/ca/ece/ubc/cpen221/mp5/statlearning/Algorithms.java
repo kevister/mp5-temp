@@ -43,7 +43,6 @@ public class Algorithms {
 			else if(r.latitude <= LAT_MIN)
 				LAT_MIN = r.latitude;
 			
-//			System.out.println(LONG_MAX + " " + LONG_MIN + " " + LAT_MAX + " " + LAT_MIN);
 		}
 		
 		Map <Point, Set<Restaurant>> centroids = new HashMap<Point, Set<Restaurant>>();
@@ -57,17 +56,14 @@ public class Algorithms {
 			centroids.put(new Point(longitude, latitude), new HashSet<Restaurant>());
 			
 		}
-		
-//		for(Point p : centroids.keySet()) {
-//			System.out.println(p.toString());
-//		}
-//		System.out.println(" ");
 
 		Map<Point, Set<Restaurant>> temp_centroids = new HashMap<Point, Set<Restaurant>>();
-		
-		int test = 0;
+		Map<Point, Set<Restaurant>> newCentroids = null;
 		
 		do {
+			
+			if (newCentroids != null)
+				centroids = newCentroids;
 						
 			for (Restaurant r : db.getRestaurantData()) {
 				
@@ -90,15 +86,6 @@ public class Algorithms {
 				centroids.get(temp).add(r);
 				
 			}
-			
-//			System.out.println("");
-//			for(Point p : temp_centroids.keySet()) {
-//				System.out.println(p.toString() + ": ");
-//				for(Restaurant s : temp_centroids.get(p)) {
-//					System.out.print(s.name + ", ");
-//				}
-//				System.out.println("");
-//			}
 			
 			temp_centroids = centroids;
 			
@@ -124,7 +111,7 @@ public class Algorithms {
 //			System.out.println("\n\n");
 //			if (true) break;
 			
-			Map<Point, Set<Restaurant>> newCentroids = new HashMap<Point, Set<Restaurant>>();
+			newCentroids = new HashMap<Point, Set<Restaurant>>();
 			
 			for (Point p : centroids.keySet()) {
 				
@@ -143,38 +130,27 @@ public class Algorithms {
 				long_ave = long_ave / centroids.get(p).size();
 				lat_ave = lat_ave / centroids.get(p).size();
 				
-				Point newPoint = new Point(long_ave, lat_ave);
+				Point newPoint = null;
+				
+				if (long_ave == 0 || lat_ave == 0)
+					newPoint = p;
+				else
+					newPoint = new Point(long_ave, lat_ave);
 				
 //				System.out.println(long_ave + " " + lat_ave);
 				
 				newCentroids.put(newPoint, new HashSet<Restaurant>());
-//				for(Restaurant r : centroids.get(p)) 
-//					newCentroids.get(newPoint).add(r);
 				
 			}
-			
-//			for(Point p : newCentroids.keySet()) {
-//				System.out.println(p.toString());
-//			}
-//			if(true) break;
-			
-			centroids = newCentroids;
-			
-//			for(Point p : centroids.keySet()) {
-//				System.out.println(p.toString() + ": ");
-//			}
-//			if (true) break;
-			
-//			System.out.println("" + "\n");
-			
-//		} while(!centroids.equals(temp_centroids));
-		} while(!equalMap(centroids, temp_centroids));
+						
+		} while(!equalMap(newCentroids, temp_centroids));
 		
 		List<Set<Restaurant>> result = new ArrayList<Set<Restaurant>>();
 		
 		for (Point p : centroids.keySet()){
 			
-			result.add(centroids.get(p));
+			Set<Restaurant> s = centroids.get(p);
+			result.add(s);
 			
 		}
 		
@@ -199,11 +175,6 @@ public class Algorithms {
 			if(temp == null)
 				return false;
 			
-			for (Restaurant r : m2.get(temp)) {
-				if(!m2.get(temp).contains(r))
-					return false;
-			}
-			
 		}
 		
 		return true;
@@ -227,13 +198,14 @@ public class Algorithms {
 				jo.put("cluster", count);
 				jo.put("weight", 4);
 				
-				result.concat(jo.toJSONString());
+//				String JOString = jo.toJSONString();
+				result = result.concat(jo.toJSONString());
 			}
 			
 			count++;
 		}
 		
-		result.concat("]");
+		result = result.concat("]");
 		
 		return result;
 	}
