@@ -1,5 +1,7 @@
 package ca.ece.ubc.cpen221.mp5;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -13,22 +15,17 @@ public class Main{
     public static void main(String[] args) {
     	
     	RestaurantDB testDatabase = new RestaurantDB("data/restaurants.json", "data/reviews.json", "data/users.json");
+    	
     	List<Set<Restaurant>> testCluster = Algorithms.kMeansClustering(4, testDatabase);
     	
-//    	System.out.println("\n\n");
-//    	for (int i = 0; i < testCluster.size(); i++) {
-//    		
-//    		for (Restaurant r : testCluster.get(i)) {
-//    			System.out.print(r.name);
-//    		}
-//    		
-//    		System.out.println("");
-//    		
-//    	}
-    	
     	String testString = Algorithms.convertClustersToJSON(testCluster);
-    	
     	System.out.println(testString);
+    	
+    	try {
+			FileWriter fw = new FileWriter("visualize/voroni.json");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     	
     }
     

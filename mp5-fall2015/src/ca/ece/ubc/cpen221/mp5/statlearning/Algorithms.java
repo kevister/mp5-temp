@@ -115,30 +115,27 @@ public class Algorithms {
 			
 			for (Point p : centroids.keySet()) {
 				
-				double long_ave = 0;
-				double lat_ave = 0;
-				
-				for (Restaurant r : centroids.get(p)) {
-					
-					long_ave += r.longitude;
-					lat_ave += r.latitude;
-					
-				}
-				
-//				System.out.println(long_ave + " " + lat_ave + " " + centroids.get(p).size());
-				
-				long_ave = long_ave / centroids.get(p).size();
-				lat_ave = lat_ave / centroids.get(p).size();
-				
 				Point newPoint = null;
 				
-				if (long_ave == 0 || lat_ave == 0)
+				if (centroids.get(p).size() == 0)
 					newPoint = p;
-				else
+				else {
+					double long_ave = 0;
+					double lat_ave = 0;
+				
+					for (Restaurant r : centroids.get(p)) {
+					
+						long_ave += r.longitude;
+						lat_ave += r.latitude;
+					
+					}
+								
+					long_ave = long_ave / centroids.get(p).size();
+					lat_ave = lat_ave / centroids.get(p).size();
+				
 					newPoint = new Point(long_ave, lat_ave);
-				
-//				System.out.println(long_ave + " " + lat_ave);
-				
+				}
+								
 				newCentroids.put(newPoint, new HashSet<Restaurant>());
 				
 			}
@@ -198,7 +195,6 @@ public class Algorithms {
 				jo.put("cluster", count);
 				jo.put("weight", 4);
 				
-//				String JOString = jo.toJSONString();
 				result = result.concat(jo.toJSONString());
 			}
 			
