@@ -16,13 +16,15 @@ public class Main{
     	
     	RestaurantDB testDatabase = new RestaurantDB("data/restaurants.json", "data/reviews.json", "data/users.json");
     	
-    	List<Set<Restaurant>> testCluster = Algorithms.kMeansClustering(4, testDatabase);
+    	List<Set<Restaurant>> testCluster = Algorithms.kMeansClustering(9, testDatabase);
     	
     	String testString = Algorithms.convertClustersToJSON(testCluster);
     	System.out.println(testString);
     	
     	try {
-			FileWriter fw = new FileWriter("visualize/voroni.json");
+			FileWriter fw = new FileWriter("visualize/voronoi.json");
+			fw.write(testString);
+			fw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

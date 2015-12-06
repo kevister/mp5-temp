@@ -5,11 +5,13 @@ import java.util.Set;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import org.json.*;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 import ca.ece.ubc.cpen221.mp5.*;
 
@@ -184,23 +186,26 @@ public class Algorithms {
 		String result = "[";
 		
 		for (Set<Restaurant> s : clusters) {
-			
+
 			for (Restaurant r : s) {
 				
-				JSONObject jo = new JSONObject();
+				Map jo =new LinkedHashMap();
 			
 				jo.put("x", r.latitude);
-				jo.put("y", r.latitude);
+				jo.put("y", r.longitude);
 				jo.put("name", r.name);
 				jo.put("cluster", count);
-				jo.put("weight", 4);
+				jo.put("weight", 4.0);
+				String jsonText = JSONValue.toJSONString(jo);
 				
-				result = result.concat(jo.toJSONString());
+				result = result.concat(jsonText + ", ");
+				
 			}
 			
 			count++;
 		}
 		
+		result = result.substring(0, result.length() - 2);
 		result = result.concat("]");
 		
 		return result;
