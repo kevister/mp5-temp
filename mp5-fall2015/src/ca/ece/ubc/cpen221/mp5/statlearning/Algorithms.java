@@ -62,8 +62,10 @@ public class Algorithms {
 //			System.out.println(p.toString());
 //		}
 //		System.out.println(" ");
-		
+
 		Map<Point, Set<Restaurant>> temp_centroids = new HashMap<Point, Set<Restaurant>>();
+		
+		int test = 0;
 		
 		do {
 						
@@ -89,14 +91,38 @@ public class Algorithms {
 				
 			}
 			
-			temp_centroids = centroids;
-			
-//			for(Point p : centroids.keySet()) {
+//			System.out.println("");
+//			for(Point p : temp_centroids.keySet()) {
 //				System.out.println(p.toString() + ": ");
-//				for(Restaurant s : centroids.get(p)) {
+//				for(Restaurant s : temp_centroids.get(p)) {
 //					System.out.print(s.name + ", ");
 //				}
+//				System.out.println("");
 //			}
+			
+			temp_centroids = centroids;
+			
+			for(Point p : centroids.keySet()) {
+				System.out.println(p.toString() + ": ");
+				for(Restaurant s : centroids.get(p)) {
+					System.out.print(s.name + ", ");
+				}
+				System.out.println("");
+			}
+			System.out.println("\n\n");
+//			if (test >4)break;
+//			test++;
+//			if (true) break;
+//			System.out.println("");
+//			for(Point p : temp_centroids.keySet()) {
+//				System.out.println(p.toString() + ": ");
+//				for(Restaurant s : temp_centroids.get(p)) {
+//					System.out.print(s.name + ", ");
+//				}
+//				System.out.println("");
+//			}
+//			System.out.println("\n\n");
+//			if (true) break;
 			
 			Map<Point, Set<Restaurant>> newCentroids = new HashMap<Point, Set<Restaurant>>();
 			
@@ -119,7 +145,7 @@ public class Algorithms {
 				
 				Point newPoint = new Point(long_ave, lat_ave);
 				
-				System.out.println(long_ave + " " + lat_ave);
+//				System.out.println(long_ave + " " + lat_ave);
 				
 				newCentroids.put(newPoint, new HashSet<Restaurant>());
 //				for(Restaurant r : centroids.get(p)) 
@@ -127,11 +153,22 @@ public class Algorithms {
 				
 			}
 			
+//			for(Point p : newCentroids.keySet()) {
+//				System.out.println(p.toString());
+//			}
+//			if(true) break;
+			
 			centroids = newCentroids;
 			
-			System.out.println("" + "\n");
+//			for(Point p : centroids.keySet()) {
+//				System.out.println(p.toString() + ": ");
+//			}
+//			if (true) break;
 			
-		} while(!centroids.equals(temp_centroids));
+//			System.out.println("" + "\n");
+			
+//		} while(!centroids.equals(temp_centroids));
+		} while(!equalMap(centroids, temp_centroids));
 		
 		List<Set<Restaurant>> result = new ArrayList<Set<Restaurant>>();
 		
@@ -144,6 +181,33 @@ public class Algorithms {
 		return result;
 		
 	}
+	
+	public static boolean equalMap(Map<Point, Set<Restaurant>> m1, Map<Point, Set<Restaurant>> m2) {
+		
+    	for (Point p : m1.keySet()) {
+			
+    		Point temp = null;
+    		
+			if (m1.size() != m2.size())
+				return false;
+			
+			for (Point p1 : m2.keySet()) {
+				if(p.equals(p1))
+					temp = p1;
+			}
+			
+			if(temp == null)
+				return false;
+			
+			for (Restaurant r : m2.get(temp)) {
+				if(!m2.get(temp).contains(r))
+					return false;
+			}
+			
+		}
+		
+		return true;
+    }
 
 	public static String convertClustersToJSON(List<Set<Restaurant>> clusters) {
 		// TODO: Implement this method
