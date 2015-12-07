@@ -11,7 +11,7 @@ public class Restaurant {
 	private String url;
 	public double longitude;
 	private JSONArray neighborhoods;
-	private String business_id;
+	public String business_id;
 	public String name;
 	private JSONArray categories;
 	private String state;
@@ -23,7 +23,7 @@ public class Restaurant {
 	private String photo_url;
 	private JSONArray schools;
 	public double latitude;
-	private long price;
+	public long price;
 
 	public Restaurant(boolean open, String url, double longitude, JSONArray neighborhoods, 
 			String business_id, String name, JSONArray categories, String state, String type,

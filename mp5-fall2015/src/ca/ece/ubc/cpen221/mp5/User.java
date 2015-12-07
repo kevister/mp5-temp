@@ -8,9 +8,9 @@ public class User {
 	private Object votes;
 	private long review_count;
 	private String type;
-	private String user_id;
+	public String user_id;
 	private String name;
-	private double average_stars;
+	public double average_stars;
 
 	public User(String url, Object votes, long review_count, String type, String user_id, String name,
 			double average_stars) {

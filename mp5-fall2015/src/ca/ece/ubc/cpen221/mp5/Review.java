@@ -7,12 +7,12 @@ import org.json.simple.JSONArray;
 public class Review {
 
 	private String type;
-	private String business_id;
+	public String business_id;
 	private Object votes;
 	private String review_id;
 	private String text;
-	private long stars;
-	private String user_id;
+	public long stars;
+	public String user_id;
 	private String date;
 
 	public Review(String type, String business_id, Object votes, String review_id, String text, long stars,

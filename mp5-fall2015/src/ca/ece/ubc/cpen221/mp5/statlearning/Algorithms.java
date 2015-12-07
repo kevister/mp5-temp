@@ -99,19 +99,6 @@ public class Algorithms {
 				System.out.println("");
 			}
 			System.out.println("\n\n");
-//			if (test >4)break;
-//			test++;
-//			if (true) break;
-//			System.out.println("");
-//			for(Point p : temp_centroids.keySet()) {
-//				System.out.println(p.toString() + ": ");
-//				for(Restaurant s : temp_centroids.get(p)) {
-//					System.out.print(s.name + ", ");
-//				}
-//				System.out.println("");
-//			}
-//			System.out.println("\n\n");
-//			if (true) break;
 			
 			newCentroids = new HashMap<Point, Set<Restaurant>>();
 			
@@ -184,7 +171,7 @@ public class Algorithms {
 		
 		int count = 1;
 		String result = "[";
-		
+
 		for (Set<Restaurant> s : clusters) {
 
 			for (Restaurant r : s) {
@@ -209,15 +196,78 @@ public class Algorithms {
 		result = result.concat("]");
 		
 		return result;
+
 	}
 
 	public static MP5Function getPredictor(User u, RestaurantDB db, MP5Function featureFunction) {
 		// TODO: Implement this method
-		return null;
+		
+		Map<Double, Long> featureOutputs = new HashMap<Double, Long>();
+		double x_mean = 0.0;		//feature function output; x-axis
+		double y_mean = 0.0;		//ratings; y-axis
+		double Sxx = 0.0;
+		double Syy = 0.0;
+		double Sxy = 0.0;
+		double b = 0.0;
+		double a = 0.0;
+		double R_sqr = 0.0;
+		
+		for (Review rev : db.getReviewData()) {
+			
+			if (rev.user_id == u.user_id) {
+				
+				for (Restaurant res : db.getRestaurantData()) {
+					if (rev.business_id == res.business_id) {
+						featureOutputs.put(featureFunction.f(res, db), rev.stars);
+						break;
+					}
+				}
+				
+			}
+				
+		}
+		
+		for (Double d : featureOutputs.keySet())
+			x_mean += d;
+		x_mean /= featureOutputs.keySet().size();
+		for (Double d : featureOutputs.keySet())
+			Sxx += Math.pow(d - x_mean, 2);
+		
+		for (Double d : featureOutputs.keySet())
+			y_mean += featureOutputs.get(d);
+		y_mean /= featureOutputs.keySet().size();
+		for (Double d : featureOutputs.keySet())
+			Syy += Math.pow(featureOutputs.get(d) - y_mean, 2);
+		
+		for (Double d : featureOutputs.keySet()) {
+			Sxy += (d - x_mean) * (featureOutputs.get(d) - y_mean);
+		}
+		
+		b = Sxy / Sxx;
+		a = y_mean - b * x_mean;
+		R_sqr = Math.pow(Sxy, 2) / (Sxx * Syy);
+		
+		return new RegressionFunction(b, a, R_sqr);
 	}
 
 	public static MP5Function getBestPredictor(User u, RestaurantDB db, List<MP5Function> featureFunctionList) {
-		// TODO: Implement this method
-		return null;
+		
+		double R_max = 0.0;
+		RegressionFunction r = new RegressionFunction();
+		
+		for (MP5Function m : featureFunctionList) {
+			
+			RegressionFunction r_temp = r;
+			r = (RegressionFunction) m;
+			
+			if (r.R_sqr > R_max)
+				r = (RegressionFunction) m;
+			else
+				r = r_temp;
+			
+		}
+		
+		return r;
+		
 	}
 }
