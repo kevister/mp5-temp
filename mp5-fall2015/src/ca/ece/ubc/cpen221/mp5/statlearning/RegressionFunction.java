@@ -24,6 +24,10 @@ public class RegressionFunction implements MP5Function{
 		this.R_sqr = 0.0;
 		
 	}
+	
+	public double output(double a, double b, double rating) {
+		return a + b * rating;
+	}
 
 	@Override
 	public double f(Restaurant yelpRestaurant, RestaurantDB db) {
